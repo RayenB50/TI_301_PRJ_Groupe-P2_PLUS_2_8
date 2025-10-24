@@ -35,7 +35,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu11 -fdiagnostics-color=always"
+					"fragment" : "-g -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk -fcolor-diagnostics"
 				}
 			],
 			"language" : "C",
@@ -61,6 +61,10 @@
 		[
 			{
 				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
 				"role" : "flags"
 			}
 		],
