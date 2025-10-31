@@ -1,0 +1,4 @@
+#ifndef MARKOV_GRAPH_H
+#define MARKOV_GRAPH_H
+
+#endif //MARKOV_GRAPH_H
