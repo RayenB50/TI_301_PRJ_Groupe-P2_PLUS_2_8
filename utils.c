@@ -62,3 +62,48 @@ void ajouter_cellule(t_liste *liste, t_cellule *cellule) {
 }
 
 // Libérer la mémoire d'une liste
+void liberer_liste(t_liste *liste) {
+    if (liste == NULL) return;
+
+    t_cellule *courant = liste->head;
+    while (courant != NULL) {
+        t_cellule *temp = courant;
+        courant = courant->suiv;
+        free(temp);
+    }
+    free(liste);
+}
+
+// Créer une liste d'adjacence vide
+t_liste_adjacence* creer_liste_adjacence_vide(int nb_sommets) {
+    t_liste_adjacence *adj = (t_liste_adjacence*)malloc(sizeof(t_liste_adjacence));
+    if (adj == NULL) {
+        perror("Erreur d'allocation mémoire pour liste d'adjacence");
+        exit(EXIT_FAILURE);
+    }
+
+    adj->nb_sommets = nb_sommets;
+    adj->listes = (t_liste*)malloc((nb_sommets + 1) * sizeof(t_liste));
+    if (adj->listes == NULL) {
+        perror("Erreur d'allocation mémoire pour tableau de listes");
+        exit(EXIT_FAILURE);
+    }
+
+    // Initialiser toutes les listes comme vides
+    for (int i = 0; i <= nb_sommets; i++) {
+        adj->listes[i].head = NULL;
+    }
+
+    return adj;
+}
+
+// Afficher la liste d'adjacence
+void afficher_liste_adjacence(t_liste_adjacence *adj) {
+    if (adj == NULL) return;
+
+    printf("\n=== Liste d'adjacence ===\n");
+    for (int i = 1; i <= adj->nb_sommets; i++) {
+        afficher_liste(&adj->listes[i], i);
+    }
+    printf("\n");
+}
