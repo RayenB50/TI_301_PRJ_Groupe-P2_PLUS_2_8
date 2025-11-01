@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "utils.h"
 
@@ -27,3 +28,18 @@ static char *getID(int i)
 
     return buffer;
 }
+
+// Créer une nouvelle cellule
+t_cellule* creer_cellule(int sommet_arrivee, float probabilite) {
+    t_cellule *nouvelle = (t_cellule*)malloc(sizeof(t_cellule));
+    if (nouvelle == NULL) {
+        perror("Erreur d'allocation mémoire pour cellule");
+        exit(EXIT_FAILURE);
+    }
+    nouvelle->sommet_arrivee = sommet_arrivee;
+    nouvelle->probabilite = probabilite;
+    nouvelle->suiv = NULL;
+    return nouvelle;
+}
+
+
