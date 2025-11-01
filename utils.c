@@ -109,3 +109,86 @@ void afficher_liste_adjacence(t_liste_adjacence *adj) {
 }
 
 // Libérer la mémoire de la liste d'adjacence
+void liberer_liste_adjacence(t_liste_adjacence *adj) {
+    if (adj == NULL) return;
+
+    for (int i = 0; i <= adj->nb_sommets; i++) {
+        t_cellule *courant = adj->listes[i].head;
+        while (courant != NULL) {
+            t_cellule *temp = courant;
+            courant = courant->suiv;
+            free(temp);
+        }
+    }
+    free(adj->listes);
+    free(adj);
+}
+
+// Lire un graphe depuis un fichier
+t_liste_adjacence* lire_graphe(const char *filename) {
+    FILE *file = fopen(filename, "rt");
+    int nbvert, depart, arrivee;
+    float proba;
+    t_liste_adjacence *adj = NULL;
+
+    if (file == NULL) {
+        perror("Impossible d'ouvrir le fichier");
+        exit(EXIT_FAILURE);
+    }
+
+    // Lire le nombre de sommets
+    if (fscanf(file, "%d", &nbvert) != 1) {
+        perror("Impossible de lire le nombre de sommets");
+        fclose(file);
+        exit(EXIT_FAILURE);
+    }
+
+    // Créer la liste d'adjacence vide
+    adj = creer_liste_adjacence_vide(nbvert);
+
+    // Lire les arêtes
+    while (fscanf(file, "%d %d %f", &depart, &arrivee, &proba) == 3) {
+        // Créer une cellule pour cette arête
+        t_cellule *nouvelle = creer_cellule(arrivee, proba);
+        // Ajouter la cellule à la liste du sommet de départ
+        ajouter_cellule(&adj->listes[depart], nouvelle);
+    }
+
+    fclose(file);
+    return adj;
+}
+
+// Vérifier si c'est un graphe de Markov valide
+int verifier_graphe_markov(t_liste_adjacence *adj) {
+    if (adj == NULL) return 0;
+
+    int valide = 1;
+    printf("\n=== Vérification du graphe de Markov ===\n");
+
+    for (int i = 1; i <= adj->nb_sommets; i++) {
+        float somme = 0.0;
+        t_cellule *courant = adj->listes[i].head;
+
+        // Calculer la somme des probabilités sortantes
+        while (courant != NULL) {
+            somme += courant->probabilite;
+            courant = courant->suiv;
+        }
+
+        // Vérifier si la somme est proche de 1 (entre 0.99 et 1.01 pour les arrondis)
+        if (somme < 0.99 || somme > 1.01) {
+            printf("Erreur : la somme des probabilités du sommet %d est %.2f\n", i, somme);
+            valide = 0;
+        }
+    }
+
+    if (valide) {
+        printf("Le graphe est un graphe de Markov\n");
+    } else {
+        printf("Le graphe n'est pas un graphe de Markov\n");
+    }
+
+    return valide;
+}
+
+// Générer un fichier au format Mermaid
