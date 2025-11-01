@@ -42,4 +42,21 @@ t_cellule* creer_cellule(int sommet_arrivee, float probabilite) {
     return nouvelle;
 }
 
+// Créer une liste vide
+t_liste* creer_liste_vide() {
+    t_liste *liste = (t_liste*)malloc(sizeof(t_liste));
+    if (liste == NULL) {
+        perror("Erreur d'allocation mémoire pour liste");
+        exit(EXIT_FAILURE);
+    }
+    liste->head = NULL;
+    return liste;
+}
 
+// Ajouter une cellule à une liste
+void ajouter_cellule(t_liste *liste, t_cellule *cellule) {
+    if (liste == NULL || cellule == NULL) return;
+
+    cellule->suiv = liste->head;
+    liste->head = cellule;
+}
