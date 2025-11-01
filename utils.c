@@ -192,3 +192,64 @@ int verifier_graphe_markov(t_liste_adjacence *adj) {
 }
 
 // Générer un fichier au format Mermaid
+void generer_fichier_mermaid(t_liste_adjacence *adj, const char *output_filename) {
+    if (adj == NULL) return;
+
+    FILE *file = fopen(output_filename, "w");
+    if (file == NULL) {
+        perror("Impossible de créer le fichier de sortie");
+        return;
+    }
+
+    // Écrire l'en-tête de configuration Mermaid
+    fprintf(file, "---\n");
+    fprintf(file, "config:\n");
+    fprintf(file, "  layout: elk\n");
+    fprintf(file, "  theme: neo\n");
+    fprintf(file, "  look: neo\n");
+    fprintf(file, "---\n\n");
+    fprintf(file, "flowchart LR\n");
+
+    // Déclarer tous les sommets
+    for (int i = 1; i <= adj->nb_sommets; i++) {
+        fprintf(file, "%s((%d))\n", getID(i), i);
+    }
+    fprintf(file, "\n");
+
+    // Écrire toutes les arêtes avec leurs probabilités
+    for (int i = 1; i <= adj->nb_sommets; i++) {
+        t_cellule *courant = adj->listes[i].head;
+
+        // Parcourir la liste dans l'ordre inverse pour respecter l'ordre du fichier
+        // D'abord, compter les éléments
+        int count = 0;
+        t_cellule *temp = courant;
+        while (temp != NULL) {
+            count++;
+            temp = temp->suiv;
+        }
+
+        // Créer un tableau temporaire pour inverser l'ordre
+        if (count > 0) {
+            t_cellule **arr = (t_cellule**)malloc(count * sizeof(t_cellule*));
+            temp = courant;
+            for (int j = count - 1; j >= 0; j--) {
+                arr[j] = temp;
+                temp = temp->suiv;
+            }
+
+            // Écrire les arêtes dans le bon ordre
+            for (int j = 0; j < count; j++) {
+                fprintf(file, "%s -->|%.2g|%s\n",
+                        getID(i),
+                        arr[j]->probabilite,
+                        getID(arr[j]->sommet_arrivee));
+            }
+
+            free(arr);
+        }
+    }
+
+    fclose(file);
+    printf("\nFichier Mermaid généré : %s\n", output_filename);
+}
