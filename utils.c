@@ -107,3 +107,5 @@ void afficher_liste_adjacence(t_liste_adjacence *adj) {
     }
     printf("\n");
 }
+
+// Libérer la mémoire de la liste d'adjacence
