@@ -61,6 +61,19 @@ void ajouter_cellule(t_liste *liste, t_cellule *cellule) {
     liste->head = cellule;
 }
 
+// Afficher une liste
+void afficher_liste(t_liste *liste, int sommet_depart) {
+    if (liste == NULL) return;
+
+    printf("Liste pour le sommet %d: [head] -> ", sommet_depart);
+    t_cellule *courant = liste->head;
+    while (courant != NULL) {
+        printf("(%d, %.2f) -> ", courant->sommet_arrivee, courant->probabilite);
+        courant = courant->suiv;
+    }
+    printf("NULL\n");
+}
+
 // Libérer la mémoire d'une liste
 void liberer_liste(t_liste *liste) {
     if (liste == NULL) return;
