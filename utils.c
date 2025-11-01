@@ -60,3 +60,5 @@ void ajouter_cellule(t_liste *liste, t_cellule *cellule) {
     cellule->suiv = liste->head;
     liste->head = cellule;
 }
+
+// Libérer la mémoire d'une liste
