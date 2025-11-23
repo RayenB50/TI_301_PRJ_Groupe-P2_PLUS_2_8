@@ -281,3 +281,70 @@ void generer_fichier_mermaid(t_liste_adjacence *adj, const char *nom_fichier) {
     fclose(file);
     printf("\nFichier Mermaid généré : %s\n", filepath);
 }
+
+//     FONCTIONS PARTIE 2
+
+// Créer une pile
+t_pile* creer_pile(int capacite) {
+    t_pile *pile = (t_pile*)malloc(sizeof(t_pile));
+    pile->data = (int*)malloc(capacite * sizeof(int));
+    pile->top = -1;
+    pile->capacite = capacite;
+    return pile;
+}
+
+// Empiler
+void empiler(t_pile *pile, int val) {
+    if (pile->top < pile->capacite - 1) {
+        pile->data[++pile->top] = val;
+    }
+}
+
+// Dépiler
+int depiler(t_pile *pile) {
+    if (pile->top >= 0) {
+        return pile->data[pile->top--];
+    }
+    return -1;
+}
+
+// Vérifier si pile vide
+int pile_vide(t_pile *pile) {
+    return pile->top == -1;
+}
+
+// Libérer la pile
+void liberer_pile(t_pile *pile) {
+    if (pile) {
+        free(pile->data);
+        free(pile);
+    }
+}
+
+// Créer une classe
+t_classe* creer_classe(const char *nom) {
+    t_classe *classe = (t_classe*)malloc(sizeof(t_classe));
+    strcpy(classe->nom, nom);
+    classe->capacite = 10;
+    classe->sommets = (int*)malloc(classe->capacite * sizeof(int));
+    classe->nb_sommets = 0;
+    return classe;
+}
+
+// Ajouter un sommet à une classe
+void ajouter_sommet_classe(t_classe *classe, int sommet) {
+    if (classe->nb_sommets >= classe->capacite) {
+        classe->capacite *= 2;
+        classe->sommets = (int*)realloc(classe->sommets, classe->capacite * sizeof(int));
+    }
+    classe->sommets[classe->nb_sommets++] = sommet;
+}
+
+// Libérer une classe
+void liberer_classe(t_classe *classe) {
+    if (classe) {
+        free(classe->sommets);
+        free(classe);
+    }
+}
+
