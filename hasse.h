@@ -2,12 +2,13 @@
 #define __HASSE_H__
 
 #include "utils.h"
-// Structure définie pour les liens
+// Structure pour un lien entre classes
 typedef struct {
-    int from;
-    int to;
+    int from; // Classe de départ
+    int to;   // Classe d'arrivée
 } t_link;
 
+// Structure pour stocker les liens
 typedef struct {
     t_link *links;
     int log_size;    // Nombre de liens
