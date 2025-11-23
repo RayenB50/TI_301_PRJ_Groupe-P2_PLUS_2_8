@@ -32,4 +32,6 @@ void liberer_link_array(t_link_array *array);
 t_link_array* trouver_liens_entre_classes(t_liste_adjacence *graphe, t_partition *partition);
 void generer_diagramme_hasse_mermaid(t_partition *partition, t_link_array *liens, const char *filename);
 
+void analyser_proprietes_graphe(t_partition *partition, t_link_array *liens);
+
 #endif
