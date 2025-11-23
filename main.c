@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 
             case 5: // Partie 2 - Tarjan et Hasse
                 if (!graphe_charge) {
-                    printf("\n✗ Chargez d'abord un graphe (option 1)\n");
+                    printf("\nChargez d'abord un graphe (option 1)\n");
                 } else {
                     printf("\n=== PARTIE 2 : Tarjan et Hasse ===\n");
 
@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
 
             case 6: // Partie 3 - Matrices
                 if (!graphe_charge) {
-                    printf("\n✗ Chargez d'abord un graphe (option 1)\n");
+                    printf("\nChargez d'abord un graphe (option 1)\n");
                 } else {
                     printf("\n=== PARTIE 3 : Calculs matriciels ===\n");
                     t_matrix M = graphe_vers_matrice(graphe);
