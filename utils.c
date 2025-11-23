@@ -384,10 +384,38 @@ void liberer_partition(t_partition *partition) {
     }
 }
 
+// Comparateur pour qsort d'entiers (ordre croissant)
+static int comparer_ints(const void *a, const void *b) {
+    int ia = *(const int *)a;
+    int ib = *(const int *)b;
+    return (ia > ib) - (ia < ib);
+}
+
+// Trier les sommets d'une classe pour un affichage cohérent
+static void trier_classe(t_classe *classe) {
+    qsort(classe->sommets, classe->nb_sommets, sizeof(int), comparer_ints);
+}
+
+// Comparateur pour trier les classes selon leur plus petit sommet
+static int comparer_classes(const void *a, const void *b) {
+    const t_classe *ca = *(const t_classe *const *)a;
+    const t_classe *cb = *(const t_classe *const *)b;
+
+    int min_a = ca->sommets[0];
+    int min_b = cb->sommets[0];
+
+    return (min_a > min_b) - (min_a < min_b);
+}
+
 // Afficher la partition
 void afficher_partition(t_partition *partition) {
+    // Trier les classes pour que l'affichage soit stable d'une exécution à l'autre
+    qsort(partition->classes, partition->nb_classes, sizeof(t_classe *), comparer_classes);
+
     printf("\n=== Composantes fortement connexes ===\n");
     for (int i = 0; i < partition->nb_classes; i++) {
+        snprintf(partition->classes[i]->nom, sizeof(partition->classes[i]->nom), "C%d", i + 1);
+
         printf("Composante %s: {", partition->classes[i]->nom);
         for (int j = 0; j < partition->classes[i]->nb_sommets; j++) {
             printf("%d", partition->classes[i]->sommets[j]);
@@ -440,7 +468,8 @@ void parcours(int v, t_liste_adjacence *graphe, t_tarjan_vertex *sommets,
             sommets[w].dans_pile = 0;
             ajouter_sommet_classe(nouvelle_classe, w);
         } while (w != v);
-        
+
+        trier_classe(nouvelle_classe);
         ajouter_classe_partition(partition, nouvelle_classe);
     }
 }
