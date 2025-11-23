@@ -146,7 +146,7 @@ t_liste_adjacence* lire_graphe(const char *nom_fichier) {
     t_liste_adjacence *adj = NULL;
 
     char filepath[256];
-    sprintf(filepath, "data/%s.txt", nom_fichier);
+    sprintf(filepath, "../data/%s.txt", nom_fichier);
 
     FILE *file = fopen(filepath, "rt");
     if (file == NULL) {
@@ -221,7 +221,7 @@ void generer_fichier_mermaid(t_liste_adjacence *adj, const char *nom_fichier) {
     if (adj == NULL) return;
 
     char filepath[256];
-    sprintf(filepath, "output/%s.mmd", nom_fichier);
+    sprintf(filepath, "../output/%s.mmd", nom_fichier);
 
     system("mkdir -p output");
     FILE *file = fopen(filepath, "w");
