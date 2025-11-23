@@ -103,9 +103,8 @@ t_link_array* trouver_liens_entre_classes(t_liste_adjacence *graphe, t_partition
 // Générer le diagramme de Hasse en Mermaid
 void generer_diagramme_hasse_mermaid(t_partition *partition, t_link_array *liens, const char *nom_fichier) {
     char filepath[256];
-    sprintf(filepath, "output/%s_hasse.mmd", nom_fichier);
+    sprintf(filepath, "../output/%s_hasse.mmd", nom_fichier);
 
-    system("mkdir -p output");
     FILE *file = fopen(filepath, "w");
     if (!file) return;
 
