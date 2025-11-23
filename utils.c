@@ -391,4 +391,94 @@ void afficher_partition(t_partition *partition) {
     }
 }
 
+// Fonction auxiliaire min
+static int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+// Fonction de parcours pour Tarjan
+static void parcours(int v, t_liste_adjacence *graphe, t_tarjan_vertex *sommets, 
+                    t_pile *pile, int *num_courant, t_partition *partition) {
+    
+    sommets[v].num = *num_courant;
+    sommets[v].num_accessible = *num_courant;
+    (*num_courant)++;
+    
+    empiler(pile, v);
+    sommets[v].dans_pile = 1;
+    
+    t_cellule *courant = graphe->listes[v].head;
+    while (courant != NULL) {
+        int w = courant->sommet_arrivee;
+        
+        if (sommets[w].num == -1) {
+            parcours(w, graphe, sommets, pile, num_courant, partition);
+            sommets[v].num_accessible = min(sommets[v].num_accessible, 
+                                           sommets[w].num_accessible);
+        } else if (sommets[w].dans_pile) {
+            sommets[v].num_accessible = min(sommets[v].num_accessible, 
+                                           sommets[w].num);
+        }
+        
+        courant = courant->suiv;
+    }
+    
+    if (sommets[v].num_accessible == sommets[v].num) {
+        char nom_classe[10];
+        sprintf(nom_classe, "C%d", partition->nb_classes + 1);
+        t_classe *nouvelle_classe = creer_classe(nom_classe);
+        
+        int w;
+        do {
+            w = depiler(pile);
+            sommets[w].dans_pile = 0;
+            ajouter_sommet_classe(nouvelle_classe, w);
+        } while (w != v);
+        
+        ajouter_classe_partition(partition, nouvelle_classe);
+    }
+}
+
+// Algorithme de Tarjan principal
+t_partition* algorithme_tarjan(t_liste_adjacence *graphe) {
+    t_partition *partition = creer_partition();
+    
+    // Initialiser les sommets
+    t_tarjan_vertex *sommets = (t_tarjan_vertex*)malloc((graphe->nb_sommets + 1) * sizeof(t_tarjan_vertex));
+    for (int i = 0; i <= graphe->nb_sommets; i++) {
+        sommets[i].id = i;
+        sommets[i].num = -1;
+        sommets[i].num_accessible = -1;
+        sommets[i].dans_pile = 0;
+    }
+    
+    t_pile *pile = creer_pile(graphe->nb_sommets);
+    int num_courant = 0;
+    
+    // Parcourir tous les sommets
+    for (int i = 1; i <= graphe->nb_sommets; i++) {
+        if (sommets[i].num == -1) {
+            parcours(i, graphe, sommets, pile, &num_courant, partition);
+        }
+    }
+    
+    free(sommets);
+    liberer_pile(pile);
+    
+    return partition;
+}
+
+// Créer tableau d'appartenance aux classes
+int* creer_tableau_classes(t_partition *partition, int nb_sommets) {
+    int *tableau = (int*)malloc((nb_sommets + 1) * sizeof(int));
+    
+    for (int i = 0; i < partition->nb_classes; i++) {
+        for (int j = 0; j < partition->classes[i]->nb_sommets; j++) {
+            int sommet = partition->classes[i]->sommets[j];
+            tableau[sommet] = i;
+        }
+    }
+    
+    return tableau;
+}
 
