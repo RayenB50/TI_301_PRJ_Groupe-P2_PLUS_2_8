@@ -5,6 +5,8 @@
 
 #include "utils.h"
 
+//     FONCTIONS PARTIE 1
+
 char *getID(int i)
 {
     // translate from 1,2,3, .. ,500+ to A,B,C,..,Z,AA,AB,...
@@ -138,15 +140,25 @@ void liberer_liste_adjacence(t_liste_adjacence *adj) {
 }
 
 // Lire un graphe depuis un fichier
-t_liste_adjacence* lire_graphe(const char *filename) {
-    FILE *file = fopen(filename, "rt");
+t_liste_adjacence* lire_graphe(const char *nom_fichier) {
     int nbvert, depart, arrivee;
     float proba;
     t_liste_adjacence *adj = NULL;
 
+    char filepath[256];
+    sprintf(filepath, "data/%s.txt", nom_fichier);
+
+    FILE *file = fopen(filepath, "rt");
     if (file == NULL) {
-        perror("Impossible d'ouvrir le fichier");
-        exit(EXIT_FAILURE);
+        sprintf(filepath, "%s.txt", nom_fichier);
+        file = fopen(filepath, "rt");
+        if (file == NULL) {
+            file = fopen(nom_fichier, "rt");
+            if (file == NULL) {
+                printf("Erreur : Impossible d'ouvrir le fichier\n");
+                return NULL;
+            }
+        }
     }
 
     // Lire le nombre de sommets
@@ -205,10 +217,14 @@ int verifier_graphe_markov(t_liste_adjacence *adj) {
 }
 
 // Générer un fichier au format Mermaid
-void generer_fichier_mermaid(t_liste_adjacence *adj, const char *output_filename) {
+void generer_fichier_mermaid(t_liste_adjacence *adj, const char *nom_fichier) {
     if (adj == NULL) return;
 
-    FILE *file = fopen(output_filename, "w");
+    char filepath[256];
+    sprintf(filepath, "output/%s.mmd", nom_fichier);
+
+    system("mkdir -p output");
+    FILE *file = fopen(filepath, "w");
     if (file == NULL) {
         perror("Impossible de créer le fichier de sortie");
         return;
@@ -231,12 +247,10 @@ void generer_fichier_mermaid(t_liste_adjacence *adj, const char *output_filename
 
     // Écrire toutes les arêtes avec leurs probabilités
     for (int i = 1; i <= adj->nb_sommets; i++) {
-        t_cellule *courant = adj->listes[i].head;
-
         // Parcourir la liste dans l'ordre inverse pour respecter l'ordre du fichier
         // D'abord, compter les éléments
         int count = 0;
-        t_cellule *temp = courant;
+        t_cellule *temp = adj->listes[i].head;
         while (temp != NULL) {
             count++;
             temp = temp->suiv;
@@ -245,7 +259,8 @@ void generer_fichier_mermaid(t_liste_adjacence *adj, const char *output_filename
         // Créer un tableau temporaire pour inverser l'ordre
         if (count > 0) {
             t_cellule **arr = (t_cellule**)malloc(count * sizeof(t_cellule*));
-            temp = courant;
+            temp = adj->listes[i].head;
+
             for (int j = count - 1; j >= 0; j--) {
                 arr[j] = temp;
                 temp = temp->suiv;
@@ -264,5 +279,5 @@ void generer_fichier_mermaid(t_liste_adjacence *adj, const char *output_filename
     }
 
     fclose(file);
-    printf("\nFichier Mermaid généré : %s\n", output_filename);
+    printf("\nFichier Mermaid généré : %s\n", filepath);
 }

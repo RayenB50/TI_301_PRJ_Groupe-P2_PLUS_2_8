@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//     STRUCTURES PARTIE 1
+
 // Structure pour une cellule (arête) de la liste chaînée
 typedef struct s_cellule {
-    int sommet_arrivee;
-    float probabilite;
-    struct s_cellule *suiv;
+    int sommet_arrivee;     // Sommet destination
+    float probabilite;      // Probabilité de transition
+    struct s_cellule *suiv; // Pointeur vers la cellule suivante
 } t_cellule;
 
 // Structure pour une liste chaînée
@@ -21,6 +23,8 @@ typedef struct {
     t_liste *listes;
     int nb_sommets;
 } t_liste_adjacence;
+
+//     STRUCTURES PARTIE 2
 
 // Structure représentant un sommet dans l'algorithme de Tarjan
 typedef struct {
@@ -52,6 +56,8 @@ typedef struct {
     int capacite;
 } t_pile;
 
+//     FONCTIONS PARTIE 1
+
 // Fonction getID déjà existante (déclaration)
 char* getID(int i);
 
@@ -71,6 +77,8 @@ void liberer_liste_adjacence(t_liste_adjacence *adj);
 t_liste_adjacence* lire_graphe(const char *filename);
 int verifier_graphe_markov(t_liste_adjacence *adj);
 void generer_fichier_mermaid(t_liste_adjacence *adj, const char *output_filename);
+
+//     FONCTIONS PARTIE 2
 
 // Fonctions pour la pile
 t_pile* creer_pile(int capacite);        // Créer une pile vide
