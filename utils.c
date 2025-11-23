@@ -348,3 +348,47 @@ void liberer_classe(t_classe *classe) {
     }
 }
 
+// Créer une partition
+t_partition* creer_partition() {
+    t_partition *partition = (t_partition*)malloc(sizeof(t_partition));
+    partition->capacite = 10;
+    partition->classes = (t_classe**)malloc(partition->capacite * sizeof(t_classe*));
+    partition->nb_classes = 0;
+    return partition;
+}
+
+// Ajouter une classe à la partition
+void ajouter_classe_partition(t_partition *partition, t_classe *classe) {
+    if (partition->nb_classes >= partition->capacite) {
+        partition->capacite *= 2;
+        partition->classes = (t_classe**)realloc(partition->classes, 
+                                                 partition->capacite * sizeof(t_classe*));
+    }
+    partition->classes[partition->nb_classes++] = classe;
+}
+
+// Libérer une partition
+void liberer_partition(t_partition *partition) {
+    if (partition) {
+        for (int i = 0; i < partition->nb_classes; i++) {
+            liberer_classe(partition->classes[i]);
+        }
+        free(partition->classes);
+        free(partition);
+    }
+}
+
+// Afficher la partition
+void afficher_partition(t_partition *partition) {
+    printf("\n=== Composantes fortement connexes ===\n");
+    for (int i = 0; i < partition->nb_classes; i++) {
+        printf("Composante %s: {", partition->classes[i]->nom);
+        for (int j = 0; j < partition->classes[i]->nb_sommets; j++) {
+            printf("%d", partition->classes[i]->sommets[j]);
+            if (j < partition->classes[i]->nb_sommets - 1) printf(",");
+        }
+        printf("}\n");
+    }
+}
+
+
