@@ -124,4 +124,115 @@ float difference_matrices(t_matrix *A, t_matrix *B) {
     return diff;
 }
 
+// Calculer la distribution stationnaire
+void calculer_distribution_stationnaire(t_matrix *M, int max_iter) {
+    printf("\n=== Recherche de la distribution stationnaire ===\n");
+    
+    t_matrix M_n = creer_matrice(M->rows, M->cols);
+    t_matrix M_n_plus_1;
+    copier_matrice(&M_n, M);
+    
+    int n = 1;
+    float epsilon = 0.01;
+    float diff;
+    
+    while (n < max_iter) {
+        M_n_plus_1 = multiplier_matrices(&M_n, M);
+        diff = difference_matrices(&M_n, &M_n_plus_1);
+        
+        if (diff < epsilon) {
+            printf("Convergence après %d itérations\n", n);
+            printf("Distribution stationnaire : π* = (");
+            for (int j = 0; j < M_n.cols; j++) {
+                printf("%.4f", M_n.data[0][j]);
+                if (j < M_n.cols - 1) printf(", ");
+            }
+            printf(")\n");
+            
+            liberer_matrice(&M_n);
+            liberer_matrice(&M_n_plus_1);
+            return;
+        }
+        
+        liberer_matrice(&M_n);
+        M_n = M_n_plus_1;
+        n++;
+    }
+    
+    printf("Pas de convergence après %d itérations\n", max_iter);
+    liberer_matrice(&M_n);
+}
 
+// Extraire sous-matrice pour une classe
+t_matrix extraire_sous_matrice(t_matrix *M, t_partition *partition, int index_classe) {
+    t_classe *classe = partition->classes[index_classe];
+    int n = classe->nb_sommets;
+    t_matrix sous_mat = creer_matrice(n, n);
+    
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            int sommet_i = classe->sommets[i] - 1;
+            int sommet_j = classe->sommets[j] - 1;
+            sous_mat.data[i][j] = M->data[sommet_i][sommet_j];
+        }
+    }
+    
+    return sous_mat;
+}
+
+// Fonction auxiliaire : PGCD
+static int pgcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+// PGCD d'un tableau
+static int pgcd_tableau(int *vals, int nbvals) {
+    if (nbvals == 0) return 0;
+    int result = vals[0];
+    for (int i = 1; i < nbvals; i++) {
+        result = pgcd(result, vals[i]);
+    }
+    return result;
+}
+
+// Calculer la période d'une sous-matrice
+int calculer_periode(t_matrix *sous_matrice) {
+    int n = sous_matrice->rows;
+    int *periodes = (int*)malloc(n * sizeof(int));
+    int nb_periodes = 0;
+    
+    t_matrix puissance = creer_matrice(n, n);
+    t_matrix temp;
+    copier_matrice(&puissance, sous_matrice);
+    
+    for (int cpt = 1; cpt <= n; cpt++) {
+        int diag_non_zero = 0;
+        
+        for (int i = 0; i < n; i++) {
+            if (puissance.data[i][i] > 0.0f) {
+                diag_non_zero = 1;
+                break;
+            }
+        }
+        
+        if (diag_non_zero) {
+            periodes[nb_periodes++] = cpt;
+        }
+        
+        temp = multiplier_matrices(&puissance, sous_matrice);
+        liberer_matrice(&puissance);
+        puissance = temp;
+    }
+    
+    int periode = pgcd_tableau(periodes, nb_periodes);
+    
+    free(periodes);
+    liberer_matrice(&puissance);
+    
+    return periode;
+}
