@@ -397,7 +397,7 @@ static int min(int a, int b) {
 }
 
 // Fonction de parcours pour Tarjan
-static void parcours(int v, t_liste_adjacence *graphe, t_tarjan_vertex *sommets, 
+void parcours(int v, t_liste_adjacence *graphe, t_tarjan_vertex *sommets,
                     t_pile *pile, int *num_courant, t_partition *partition) {
     
     sommets[v].num = *num_courant;

@@ -61,6 +61,18 @@ build CMakeFiles/TI_301_PJT.dir/utils.c.o: C_COMPILER__TI_301_PJT_unscanned_Debu
   OBJECT_DIR = CMakeFiles/TI_301_PJT.dir
   OBJECT_FILE_DIR = CMakeFiles/TI_301_PJT.dir
 
+build CMakeFiles/TI_301_PJT.dir/hasse.c.o: C_COMPILER__TI_301_PJT_unscanned_Debug /Users/rayen/CLionProjects/TI_301_PRJ_Groupe-P2_PLUS_2_8/hasse.c || cmake_object_order_depends_target_TI_301_PJT
+  DEP_FILE = CMakeFiles/TI_301_PJT.dir/hasse.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/TI_301_PJT.dir
+  OBJECT_FILE_DIR = CMakeFiles/TI_301_PJT.dir
+
+build CMakeFiles/TI_301_PJT.dir/matrix.c.o: C_COMPILER__TI_301_PJT_unscanned_Debug /Users/rayen/CLionProjects/TI_301_PRJ_Groupe-P2_PLUS_2_8/matrix.c || cmake_object_order_depends_target_TI_301_PJT
+  DEP_FILE = CMakeFiles/TI_301_PJT.dir/matrix.c.o.d
+  FLAGS = -g -std=gnu11 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/TI_301_PJT.dir
+  OBJECT_FILE_DIR = CMakeFiles/TI_301_PJT.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target TI_301_PJT
@@ -69,7 +81,7 @@ build CMakeFiles/TI_301_PJT.dir/utils.c.o: C_COMPILER__TI_301_PJT_unscanned_Debu
 #############################################
 # Link the executable TI_301_PJT
 
-build TI_301_PJT: C_EXECUTABLE_LINKER__TI_301_PJT_Debug CMakeFiles/TI_301_PJT.dir/main.c.o CMakeFiles/TI_301_PJT.dir/utils.c.o
+build TI_301_PJT: C_EXECUTABLE_LINKER__TI_301_PJT_Debug CMakeFiles/TI_301_PJT.dir/main.c.o CMakeFiles/TI_301_PJT.dir/utils.c.o CMakeFiles/TI_301_PJT.dir/hasse.c.o CMakeFiles/TI_301_PJT.dir/matrix.c.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.sdk
   OBJECT_DIR = CMakeFiles/TI_301_PJT.dir
   POST_BUILD = :
