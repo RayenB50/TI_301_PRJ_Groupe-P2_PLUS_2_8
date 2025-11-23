@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
                     scanf("%d", &supprimer);
                     if (supprimer) {
                         removeTransitiveLinks(liens);
-                        printf("✓ Liens transitifs supprimés\n");
+                        printf("Liens transitifs supprimés\n");
                     }
 
                     // Générer Hasse
