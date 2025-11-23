@@ -268,10 +268,16 @@ void generer_fichier_mermaid(t_liste_adjacence *adj, const char *nom_fichier) {
 
             // Écrire les arêtes dans le bon ordre
             for (int j = 0; j < count; j++) {
+                char depart_id[10];
+                char arrivee_id[10];
+                strcpy(depart_id, getID(i));
+                strcpy(arrivee_id, getID(arr[j]->sommet_arrivee));
+
                 fprintf(file, "%s -->|%.2g|%s\n",
-                        getID(i),
+                        depart_id,
                         arr[j]->probabilite,
-                        getID(arr[j]->sommet_arrivee));
+                        arrivee_id);
+
             }
 
             free(arr);
